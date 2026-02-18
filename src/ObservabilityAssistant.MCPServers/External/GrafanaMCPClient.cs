@@ -14,15 +14,19 @@ public class GrafanaMCPClient : ExternalMCPClient
         string grafanaApiKey,
         ILogger<GrafanaMCPClient> logger)
     {
+        // Convert localhost to host.docker.internal for Docker networking
+        var dockerGrafanaUrl = grafanaUrl.Replace("localhost", "host.docker.internal");
+        
         var args = new[]
         {
             "run",
             "--rm",
             "-i",
+            "--add-host=host.docker.internal:host-gateway",
             "-e",
-            "GRAFANA_URL",
+            $"GRAFANA_URL={dockerGrafanaUrl}",
             "-e",
-            "GRAFANA_SERVICE_ACCOUNT_TOKEN",
+            $"GRAFANA_SERVICE_ACCOUNT_TOKEN={grafanaApiKey}",
             "mcp/grafana",
             "-t",
             "stdio"

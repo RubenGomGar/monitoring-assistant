@@ -1,0 +1,12 @@
+# Global ignores for Docker context
+**/bin/
+**/obj/
+.git/
+.vscode/
+.vs/
+**/*.user
+**/*.suo
+**/.DS_Store
+**/*.log
+**/node_modules/
+**/coverage/

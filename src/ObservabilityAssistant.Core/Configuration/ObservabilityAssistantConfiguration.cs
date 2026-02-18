@@ -34,6 +34,12 @@ public class GrafanaMCPConfiguration
     public string GrafanaUrl { get; set; } = "http://localhost:3000";
     public string GrafanaApiKey { get; set; } = string.Empty;
     public bool UseCustomMCPs { get; set; } = false;
+    
+    // Configuración para MCP remoto (en AKS)
+    public bool UseRemoteMCP { get; set; } = false;
+    public string? RemoteMCPUrl { get; set; } = null;
+    public string RemoteMCPEndpoint { get; set; } = "/mcp";
+    
     public void Validate()
     {
         if (!Enabled)
@@ -44,6 +50,9 @@ public class GrafanaMCPConfiguration
             throw new InvalidOperationException("Grafana API Key is not configured");
         if (!Uri.TryCreate(GrafanaUrl, UriKind.Absolute, out _))
             throw new InvalidOperationException("Grafana URL is not a valid URI");
+            
+        if (UseRemoteMCP && string.IsNullOrWhiteSpace(RemoteMCPUrl))
+            throw new InvalidOperationException("Remote MCP URL is required when UseRemoteMCP is true");
     }
 }
 public class ObservabilityAssistantConfiguration

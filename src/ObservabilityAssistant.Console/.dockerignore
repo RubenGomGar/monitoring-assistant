@@ -1,0 +1,11 @@
+bin/
+obj/
+.vscode/
+.vs/
+**/*.user
+**/*.suo
+**/*.csproj.user
+**/.DS_Store
+**/*.log
+**/node_modules/
+**/coverage/
