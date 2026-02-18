@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-api-pinger
+  namespace: apps
+  labels:
+    app: demo-api-pinger
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-api-pinger
+  template:
+    metadata:
+      labels:
+        app: demo-api-pinger
+    spec:
+      containers:
+        - name: pinger
+          image: curlimages/curl:8.11.1
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              echo "Starting ping loop to http://demo-api.apps.svc.cluster.local/ping";
+              while true; do
+                TS=$(date -u +"%Y-%m-%dT%H:%M:%SZ");
+                echo "[$TS] Hitting /ping...";
+                curl -sS -m 5 -w "HTTP %{http_code} in %{time_total}s\n" http://demo-api.apps.svc.cluster.local/ping || echo "Request failed";
+                sleep 10;
+              done
+          resources:
+            requests:
+              cpu: 5m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
